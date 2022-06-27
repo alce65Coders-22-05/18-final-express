@@ -49,7 +49,16 @@ export class BasicController<T> {
 
     deleteController = async (req: Request, resp: Response) => {
         const deleteItem = await this.model.findByIdAndDelete(req.params.id);
-        // resp.status(status);
-        resp.send(JSON.stringify(deleteItem));
+        if (deleteItem === null) {
+            resp.status(404);
+            resp.send(
+                JSON.stringify({
+                    error: 'Delete impossible',
+                })
+            );
+        } else {
+            resp.status(202);
+            resp.send(JSON.stringify(deleteItem));
+        }
     };
 }

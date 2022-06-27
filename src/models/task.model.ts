@@ -3,7 +3,10 @@ import { mongooseConnect, RelationField } from '../db/mongoose.js';
 import { iAppModel } from './app.model.js';
 
 // const connect =
-await mongooseConnect();
+(async () => {
+    await mongooseConnect();
+})();
+
 // connect.disconnect()
 
 /* eslint-disable no-unused-vars */
