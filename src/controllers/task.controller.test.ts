@@ -1,13 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
-import mongoose from 'mongoose';
-import { iAppModel } from '../models/app.model';
 import { iTask, Task } from '../models/task.model';
-import { BasicController } from './basic.controller';
+import { TaskController } from './task.controller';
 
 jest.mock('../models/task.model');
 
 describe('Given a instantiated controller BasicController with model Task injected', () => {
-    let controller: BasicController<iTask>;
+    let controller: TaskController<iTask>;
     let req: Partial<Request>;
     let resp: Partial<Response>;
     let next: NextFunction;
@@ -23,19 +21,16 @@ describe('Given a instantiated controller BasicController with model Task inject
         // eslint-disable-next-line no-unused-labels
         next: jest.fn();
 
-        controller = new BasicController(
-            Task as unknown as iAppModel<mongoose.Schema>
-        ) as BasicController<iTask>;
+        controller = new TaskController(Task) as any;
     });
     describe('When method getAllController is called', () => {
         test('Then resp.send should be called', async () => {
-            (Task as unknown as iAppModel<mongoose.Schema>).appFind;
-            Task.find = jest.fn();
+            Task.find = jest.fn().mockReturnValue({
+                populate: jest.fn().mockResolvedValue({ task: 'test' }),
+            });
             await controller.getAllController(req as Request, resp as Response);
-            expect(
-                (Task as unknown as iAppModel<mongoose.Schema>).appFind
-            ).toHaveBeenCalled();
-            expect(resp.send).toHaveBeenCalled();
+            expect(Task.find).toHaveBeenCalled();
+            expect(resp.send).toHaveBeenCalledWith({ task: 'test' });
         });
     });
 

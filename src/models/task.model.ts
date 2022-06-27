@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
 import { mongooseConnect, RelationField } from '../db/mongoose.js';
-import { iAppModel } from './app.model.js';
 
 // const connect =
 (async () => {
@@ -33,16 +32,6 @@ taskSchema.set('toJSON', {
 });
 
 export const Task = mongoose.model('Task', taskSchema);
-
-(Task as unknown as iAppModel<mongoose.Schema>).appFind = () => {
-    return Task.find().populate('responsible', {
-        tasks: 0,
-    });
-};
-
-(Task as unknown as iAppModel<mongoose.Schema>).appFindById = (id: string) => {
-    Task.findById({ id });
-};
 
 // create;
 // findByIdAndUpdate

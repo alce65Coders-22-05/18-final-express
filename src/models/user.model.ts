@@ -1,9 +1,10 @@
 import mongoose from 'mongoose';
 import { mongooseConnect, RelationField } from '../db/mongoose.js';
-import { iAppModel } from './app.model.js';
 
 // const connect =
-await mongooseConnect();
+(async () => {
+    await mongooseConnect();
+})();
 // connect.disconnect()
 
 /* eslint-disable no-unused-vars */
@@ -32,13 +33,3 @@ userSchema.set('toJSON', {
 });
 
 export const User = mongoose.model('User', userSchema);
-
-(User as unknown as iAppModel<mongoose.Schema>).appFind = () => {
-    return User.find().populate('tasks', {
-        responsible: 0,
-    });
-};
-
-(User as unknown as iAppModel<mongoose.Schema>).appFindById = (id: string) => {
-    User.findById({ id });
-};

@@ -1,14 +1,13 @@
 /* eslint-disable no-unused-vars */
 import { NextFunction, Request, Response } from 'express';
-import { iAppModel } from '../models/app.model';
-
+import { Model } from 'mongoose';
 export class BasicController<T> {
-    constructor(public model: iAppModel<T>) {}
+    constructor(public model: Model<T>) {}
 
     getAllController = async (req: Request, resp: Response) => {
         req;
         resp.setHeader('Content-type', 'application/json');
-        resp.send(await this.model.appFind());
+        resp.send(await this.model.find());
     };
 
     getController = async (req: Request, resp: Response) => {
