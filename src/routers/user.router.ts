@@ -1,12 +1,8 @@
 import { Router } from 'express';
 import { User } from '../models/user.model.js';
-import { BasicController } from '../controllers/basic.controller.js';
-import { iAppModel } from '../models/app.model.js';
-import mongoose from 'mongoose';
+import { UserController } from '../controllers/user.controller.js';
 
-export const userController = new BasicController(
-    User as unknown as iAppModel<mongoose.Schema>
-);
+export const userController = new UserController(User);
 export const userRouter = Router();
 
 userRouter.get('/', userController.getAllController);

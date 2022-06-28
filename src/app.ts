@@ -30,9 +30,9 @@ app.use((error: Error, req: Request, resp: Response, next: NextFunction) => {
     console.log(error.message);
     let status = 500;
     if (error.name === 'ValidationError') {
-        status = 406;
-    } else {
-        //
+        status = 406; // Not Acceptable
+    } else if (error.name === 'CastError') {
+        status = 422; // Unprocessable entity
     }
     resp.status(status);
     const result = {

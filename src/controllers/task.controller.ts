@@ -19,6 +19,32 @@ export class TaskController<T> extends BasicController<T> {
         );
     };
 
+    getController = async (
+        req: Request,
+        resp: Response,
+        next: NextFunction
+    ) => {
+        resp.setHeader('Content-type', 'application/json');
+        console.log('Search for id:', req.params.id);
+        let result;
+        try {
+            result = await this.model
+                .findById(req.params.id)
+                .populate('responsible', {
+                    tasks: 0,
+                });
+        } catch (error) {
+            next(error);
+            return;
+        }
+        if (result) {
+            resp.send(JSON.stringify(result));
+        } else {
+            resp.status(404);
+            resp.send(JSON.stringify({}));
+        }
+    };
+
     postController = async (
         req: Request,
         resp: Response,

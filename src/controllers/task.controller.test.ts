@@ -38,13 +38,21 @@ describe('Given a instantiated controller BasicController with model Task inject
         test('And response is ok, then resp.send should be called with data', async () => {
             const result = { test: 'test' };
             Task.findById = jest.fn().mockResolvedValue(result);
-            await controller.getController(req as Request, resp as Response);
+            await controller.getController(
+                req as Request,
+                resp as Response,
+                next
+            );
             expect(resp.send).toHaveBeenCalledWith(JSON.stringify(result));
         });
         test('And response is not ok, then resp.send should be called without data', async () => {
             const result = null;
             Task.findById = jest.fn().mockResolvedValue(result);
-            await controller.getController(req as Request, resp as Response);
+            await controller.getController(
+                req as Request,
+                resp as Response,
+                next
+            );
             expect(resp.send).toHaveBeenCalledWith(JSON.stringify({}));
             expect(resp.status).toHaveBeenCalledWith(404);
         });
