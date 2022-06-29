@@ -9,9 +9,10 @@ import { mongooseConnect, RelationField } from '../db/mongoose.js';
 
 /* eslint-disable no-unused-vars */
 export interface iUser {
-    id: string;
+    id?: string;
     name: string;
     email: string;
+    passwd: string;
     tasks: Array<RelationField>;
 }
 

@@ -8,7 +8,7 @@
         "start": "run-p start:ts start:build",
         "start:ts": "tsc --watch",
         "start:build": "cross-env PORT=3400 nodemon ./dist/index.js",
-        "test": "jest --watchAll --coverage"
+        "test": "cross-env jest --watchAll --coverage --passWithNoTests"
     },
     "author": "Alejandro Cerezo",
     "license": "ISC",

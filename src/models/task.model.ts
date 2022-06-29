@@ -10,9 +10,9 @@ import { mongooseConnect, RelationField } from '../db/mongoose.js';
 
 /* eslint-disable no-unused-vars */
 export interface iTask {
-    id: string;
+    id?: string;
     title: string;
-    responsible: RelationField;
+    responsible: RelationField | null;
     isCompleted: boolean;
 }
 
