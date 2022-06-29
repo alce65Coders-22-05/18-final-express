@@ -1,8 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
-import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
+import { JwtPayload } from 'jsonwebtoken';
 import { ExtRequest, iTokenPayload } from '../interfaces/token';
-dotenv.config();
+import * as aut from '../services/authorization.js';
 
 export const loginRequired = (
     req: Request,
@@ -13,10 +12,10 @@ export const loginRequired = (
     let token;
     const tokenError = new Error('token missing or invalid');
     tokenError.name = 'TokenError';
-    let decodedToken;
+    let decodedToken: string | JwtPayload;
     if (authorization && authorization.toLowerCase().startsWith('bearer')) {
         token = authorization.substring(7);
-        decodedToken = jwt.verify(token, process.env.SECRET as string);
+        decodedToken = aut.verifyToken(token);
         if (typeof decodedToken === 'string') {
             next(tokenError);
         } else {

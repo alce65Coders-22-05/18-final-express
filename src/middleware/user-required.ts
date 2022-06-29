@@ -3,7 +3,7 @@ import { ExtRequest } from '../interfaces/token';
 
 import { Task } from '../models/task.model.js';
 
-export const userRequired = async (
+export const userRequiredForTasks = async (
     req: Request,
     resp: Response,
     next: NextFunction

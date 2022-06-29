@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
 
-const errors: any = {
+const errors: {
+    [key: string]: number;
+} = {
     ValidationError: 406, // Not Acceptable
     CastError: 422, // Unprocessable entity
     UserError: 404, // Not found
