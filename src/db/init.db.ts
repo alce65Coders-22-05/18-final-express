@@ -50,7 +50,9 @@ export const initDB = async () => {
         );
     }
 
-    console.log(finalUsers);
-
     connect.disconnect();
+    return {
+        tasks,
+        users: finalUsers,
+    };
 };
