@@ -4,7 +4,7 @@ import { iUser, User } from '../models/user.model.js';
 import { encrypt } from '../services/authorization.js';
 import { mongooseConnect } from './mongoose.js';
 
-const aUsers: Array<iUser> = [
+let aUsers: Array<iUser> = [
     {
         name: 'Pepe',
         passwd: '1234',
@@ -26,27 +26,31 @@ const aTasks: Array<iTask> = [
 
 export const initDB = async () => {
     const connect = await mongooseConnect();
-    aUsers.map(async (item) => ({ item, passwd: await encrypt(item.passwd) }));
+    aUsers = await Promise.all(
+        aUsers.map(async (item) => ({
+            ...item,
+            passwd: await encrypt(item.passwd),
+        }))
+    );
     const users = await User.insertMany(aUsers);
     aTasks[0].responsible = users[0].id;
     aTasks[1].responsible = users[1].id;
     const tasks = await Task.insertMany(aTasks);
-    console.log(tasks);
-    const u1 = await User.findByIdAndUpdate(
-        users[0].id,
-        {
-            $set: { tasks: [tasks[0].id] },
-        },
-        { new: true }
-    );
-    const u2 = await User.findByIdAndUpdate(
-        users[1].id,
-        {
-            $set: { tasks: [tasks[1].id] },
-        },
-        { new: true }
-    );
-    console.log(u1, u2);
+
+    let finalUsers = [];
+    for (let i = 0; i < users.length; i++) {
+        const item = users[i];
+        finalUsers[i] = await User.findByIdAndUpdate(
+            item.id,
+            {
+                $set: { tasks: [tasks[i].id] },
+            },
+            // { ...item, tasks: [tasks[i].id] },
+            { new: true }
+        );
+    }
+
+    console.log(finalUsers);
 
     connect.disconnect();
 };
