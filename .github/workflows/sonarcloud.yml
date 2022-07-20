@@ -54,6 +54,11 @@ jobs:
               run: npm run test:prod #Change for a valid npm script
               env:
                   JWT_SECRET: ${{ secrets.JWT_SECRET }}
+
+            ## This is one of the suggested fixes.
+            ## Im removing the dir paths that were tested for and make them relative paths.
+            - name: Fix coverage report
+              run: sed -i "s+/home/runner/work/18-final-express/18-final-express/++g" coverage/lcov.in
             - name: SonarCloud Scan
               uses: SonarSource/sonarcloud-github-action@master
               env:
