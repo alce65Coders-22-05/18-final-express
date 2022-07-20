@@ -10,7 +10,7 @@
         "start:ts": "tsc --watch",
         "start:build": "cross-env PORT=3400 nodemon ./dist/index.js",
         "test": "cross-env jest --watchAll --coverage --passWithNoTests",
-        "test:prod": "cross-env jest --watchAll --coverage --passWithNoTests --ci --silent --watchAll=false"
+        "test:prod": "cross-env jest --watchAll --coverage --testPathIgnorePatterns=e2e --passWithNoTests --ci --silent --watchAll=false"
     },
     "author": "Alejandro Cerezo",
     "license": "ISC",

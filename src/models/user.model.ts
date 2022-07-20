@@ -1,10 +1,10 @@
 import mongoose from 'mongoose';
-import { mongooseConnect, RelationField } from '../db/mongoose.js';
+import { RelationField } from '../db/mongoose.js';
 
 // const connect =
-(async () => {
-    await mongooseConnect();
-})();
+// (async () => {
+//     await mongooseConnect();
+// })();
 // connect.disconnect()
 
 /* eslint-disable no-unused-vars */

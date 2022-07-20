@@ -1,6 +1,7 @@
 import http from 'http';
 import { AddressInfo } from 'net';
 import { app } from './app.js';
+import { mongooseConnect } from './db/mongoose.js';
 
 const PORT = process.env.PORT || 3200;
 
@@ -20,6 +21,7 @@ const onListening = () => {
     console.log(`Listening on ${bind}`);
 };
 
+mongooseConnect();
 app.set('port', PORT);
 export const server = http.createServer(app);
 server.on('error', onError);
