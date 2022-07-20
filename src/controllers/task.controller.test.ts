@@ -1,8 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
 import { iTask, Task } from '../models/task.model';
+import { User } from '../models/user.model';
 import { TaskController } from './task.controller';
 
 jest.mock('../models/task.model');
+jest.mock('../models/user.model');
 
 describe('Given a instantiated controller BasicController with model Task injected', () => {
     let controller: TaskController<iTask>;
@@ -12,32 +14,34 @@ describe('Given a instantiated controller BasicController with model Task inject
     beforeEach(() => {
         req = {
             params: { id: '1' },
+            body: {},
         };
         resp = {
             setHeader: jest.fn(),
             status: jest.fn(),
             send: jest.fn(),
         };
-        // eslint-disable-next-line no-unused-labels
-        next: jest.fn();
+        next = jest.fn();
 
         controller = new TaskController(Task) as any;
     });
     describe('When method getAllController is called', () => {
         test('Then resp.send should be called', async () => {
             Task.find = jest.fn().mockReturnValue({
-                populate: jest.fn().mockResolvedValue({ task: 'test' }),
+                populate: jest.fn().mockResolvedValue([{ task: 'test' }]),
             });
             await controller.getAllController(req as Request, resp as Response);
             expect(Task.find).toHaveBeenCalled();
-            expect(resp.send).toHaveBeenCalledWith({ task: 'test' });
+            expect(resp.send).toHaveBeenCalledWith([{ task: 'test' }]);
         });
     });
 
     describe('When method getController is called', () => {
         test('And response is ok, then resp.send should be called with data', async () => {
             const result = { test: 'test' };
-            Task.findById = jest.fn().mockResolvedValue(result);
+            Task.findById = jest.fn().mockReturnValue({
+                populate: jest.fn().mockResolvedValue(result),
+            });
             await controller.getController(
                 req as Request,
                 resp as Response,
@@ -47,7 +51,10 @@ describe('Given a instantiated controller BasicController with model Task inject
         });
         test('And response is not ok, then resp.send should be called without data', async () => {
             const result = null;
-            Task.findById = jest.fn().mockResolvedValue(result);
+
+            Task.findById = jest.fn().mockReturnValue({
+                populate: jest.fn().mockResolvedValue(result),
+            });
             await controller.getController(
                 req as Request,
                 resp as Response,
@@ -61,6 +68,11 @@ describe('Given a instantiated controller BasicController with model Task inject
     describe('When method postController is called', () => {
         test('Then resp.send should be called with data', async () => {
             const result = { test: 'test' };
+            req.body.responsible = 'Pepe';
+            User.findById = jest.fn().mockResolvedValue({
+                tasks: [],
+                save: jest.fn(),
+            });
             Task.create = jest.fn().mockResolvedValue(result);
             await controller.postController(
                 req as Request,
