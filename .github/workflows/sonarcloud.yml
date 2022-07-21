@@ -29,57 +29,58 @@
 name: SonarCloud Analysis
 
 on:
-    push:
-        branches: ['main']
-    pull_request:
-        types: [opened, synchronize, reopened]
-    workflow_dispatch:
+  push:
+    branches: ['main']
+  pull_request:
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
 
 permissions:
-    pull-requests: read # allows SonarCloud to decorate PRs with analysis results
+  pull-requests: read # allows SonarCloud to decorate PRs with analysis results
 
 jobs:
     SonarCloud:
         name: SonarCloud
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v3
-              with:
-                  fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
-            - name: Install modules
-              run: npm ci
-            - name: Start tsc
-              run: npm start
-            - name: Testing coverage
-              run: npm run test:prod #Change for a valid npm script
-              env:
-                  JWT_SECRET: ${{ secrets.JWT_SECRET }}
+        - uses: actions/checkout@v3
+          with:
+            fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
+        - name: Install modules
+          run: npm ci
+        - name: Start tsc
+          run: npm start
+        - name: Testing coverage
+          run: npm run test:prod #Change for a valid npm script
+          env:
+            JWT_SECRET: ${{ secrets.JWT_SECRET }}
 
-            ## This is one of the suggested fixes.
-            ## Im removing the dir paths that were tested for and make them relative paths.
-            - name: Show initial lcov
-              run: cat coverage/lcov.info
-            # - name: Fix coverage report
-            #   run: sed -i "s+/home/runner/work/18-final-express/18-final-express/++g" coverage/lcov.info
-            # - name: Show final lcov
-            #   run: cat coverage/lcov.info
-            - name: SonarCloud Scan
-              uses: SonarSource/sonarcloud-github-action@master
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed to get PR information, if any
-                  SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }} # Generate a token on Sonarcloud.io, add it to the secrets of this repo with the name SONAR_TOKEN (Settings > Secrets > Actions > add new repository secret)
-              with:
-                  # Additional arguments for the sonarcloud scanner
-                  args:
-                      # Unique keys of your project and organization. You can find them in SonarCloud > Information (bottom-left menu)
-                      # mandatory
-                      -Dsonar.projectKey=alce65_18-final-express
-                      -Dsonar.organization=alce65
-                      # Comma-separated paths to directories containing main source files.
-                      #-Dsonar.sources= # optional, default is project base directory
-                      # When you need the analysis to take place in a directory other than the one from which it was launched
-                      #-Dsonar.projectBaseDir= # optional, default is .
-                      # Comma-separated paths to directories containing test source files.
-                      #-Dsonar.tests= # optional. For more info about Code Coverage, please refer to https://docs.sonarcloud.io/enriching/test-coverage/overview/
-                      # Adds more detail to both client and server-side analysis logs, activating DEBUG mode for the scanner, and adding client-side environment variables and system properties to the server-side log of analysis report processing.
-                      -Dsonar.verbose=true # optional, default is false
+        ## This is one of the suggested fixes.
+        ## Im removing the dir paths that were tested for and make them relative paths.
+        - name: Show initial lcov
+          run: cat coverage/lcov.info
+        # - name: Fix coverage report
+        #   run: sed -i "s+/home/runner/work/18-final-express/18-final-express/++g" coverage/lcov.info
+        # - name: Show final lcov
+        #   run: cat coverage/lcov.info
+
+        - name: SonarCloud Scan
+          uses: SonarSource/sonarcloud-github-action@master
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed to get PR information, if any
+            SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }} # Generate a token on Sonarcloud.io, add it to the secrets of this repo with the name SONAR_TOKEN (Settings > Secrets > Actions > add new repository secret)
+          with:
+            # Additional arguments for the sonarcloud scanner
+            args:
+              # Unique keys of your project and organization. You can find them in SonarCloud > Information (bottom-left menu)
+              # mandatory
+              -Dsonar.projectKey=alce65_18-final-express
+              -Dsonar.organization=alce65
+              # Comma-separated paths to directories containing main source files.
+              #-Dsonar.sources= # optional, default is project base directory
+              # When you need the analysis to take place in a directory other than the one from which it was launched
+              #-Dsonar.projectBaseDir= # optional, default is .
+              # Comma-separated paths to directories containing test source files.
+              #-Dsonar.tests= # optional. For more info about Code Coverage, please refer to https://docs.sonarcloud.io/enriching/test-coverage/overview/
+              # Adds more detail to both client and server-side analysis logs, activating DEBUG mode for the scanner, and adding client-side environment variables and system properties to the server-side log of analysis report processing.
+              -Dsonar.verbose=true # optional, default is false
