@@ -57,9 +57,11 @@ jobs:
 
             ## This is one of the suggested fixes.
             ## Im removing the dir paths that were tested for and make them relative paths.
-            - name: Fix coverage report
+            - name: Show initial lcov
               run: cat coverage/lcov.info
+            - name: Fix coverage report
               run: sed -i "s+/home/runner/work/18-final-express/18-final-express/++g" coverage/lcov.info
+            - name: Show final lcov
               run: cat coverage/lcov.info
             - name: SonarCloud Scan
               uses: SonarSource/sonarcloud-github-action@master
