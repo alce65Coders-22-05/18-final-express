@@ -60,7 +60,7 @@ jobs:
       - name: Show initial lcov
         run: cat coverage/lcov.info
       - name: Fix coverage report src
-        run: sed -i "s/src/dist/" coverage/lcov.info
+        run: sed -i "s/dist/src/" coverage/lcov.info
       - name: Fix coverage report ext
         run: sed -i "s/.js/.ts/" coverage/lcov.info
       - name: Show final lcov
