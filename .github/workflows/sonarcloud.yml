@@ -59,10 +59,12 @@ jobs:
       ## Im removing the dir paths that were tested for and make them relative paths.
       - name: Show initial lcov
         run: cat coverage/lcov.info
-      # - name: Fix coverage report
-      #   run: sed -i "s+/home/runner/work/18-final-express/18-final-express/++g" coverage/lcov.info
-      # - name: Show final lcov
-      #   run: cat coverage/lcov.info
+      - name: Fix coverage report src
+        run: sed -i "src/dist" coverage/lcov.info
+      - name: Fix coverage report ext
+        run: sed -i ".js/.ts" coverage/lcov.info
+      - name: Show final lcov
+        run: cat coverage/lcov.info
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
